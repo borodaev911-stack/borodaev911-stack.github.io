@@ -6,87 +6,321 @@
     <title>Кредитный калькулятор</title>
     <style>
         .credit-widget {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            max-width: 400px;
-            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 10px 0;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #333;
         }
         input, select {
             width: 100%;
-            padding: 8px;
+            padding: 8px 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            border-color: #4a76a8;
+            outline: none;
         }
         button {
-            background: #007bff;
+            background: #4a76a8;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #3a6690;
         }
         .result {
-            margin-top: 20px;
+            margin-top: 15px;
             padding: 15px;
             background: #f8f9fa;
             border-radius: 5px;
+            border-left: 3px solid #4a76a8;
+            display: none;
+        }
+        .result-header {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .result-label {
+            color: #666;
+            flex: 1;
+        }
+        .result-value {
+            font-weight: 600;
+            color: #2c3e50;
+            flex: 1;
+            text-align: right;
+        }
+        .result-divider {
+            border-top: 1px dashed #ddd;
+            margin: 10px 0;
+        }
+        .result-total {
+            background: #e8f4fd;
+            margin: 12px -15px -15px -15px;
+            padding: 12px 15px;
+            border-radius: 0 0 5px 5px;
+        }
+        .rules {
+            font-size: 11px;
+            color: #666;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .rules h4 {
+            margin: 0 0 8px 0;
+            color: #4a76a8;
+            font-size: 12px;
+        }
+        .rules ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        .rules li {
+            margin-bottom: 4px;
+        }
+        .calculation-params {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+        .param-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
     <div class="credit-widget">
-        <h2>Кредитный калькулятор</h2>
+        <h3 style="margin: 0 0 15px 0; color: #2c3e50; font-size: 16px;">Кредитный калькулятор</h3>
+        
         <form id="creditForm">
             <div class="form-group">
-                <label>Сумма кредита (руб.)</label>
-                <input type="number" id="amount" value="1000000" required>
+                <label for="amount">Сумма кредита (руб.)</label>
+                <input type="number" id="amount" name="amount" required placeholder="1 000 000">
             </div>
+            
             <div class="form-group">
-                <label>Первоначальный взнос (руб.)</label>
-                <input type="number" id="downPayment" value="200000" required>
+                <label for="downPayment">Первоначальный взнос (руб.)</label>
+                <input type="number" id="downPayment" name="downPayment" required placeholder="200 000">
             </div>
+            
             <div class="form-group">
-                <label>Процентная ставка (%)</label>
-                <input type="number" id="interestRate" value="0.01" step="0.01" required>
+                <label for="downPaymentPercent">Взнос (%)</label>
+                <input type="number" id="downPaymentPercent" name="downPaymentPercent" min="0" max="100" step="1" placeholder="20">
             </div>
+            
             <div class="form-group">
-                <label>Срок кредита (мес.)</label>
-                <select id="term">
-                    <option value="12">12 месяцев</option>
-                    <option value="24">24 месяца</option>
-                    <option value="36">36 месяцев</option>
+                <label for="interestRate">Процентная ставка (% год.)</label>
+                <input type="number" step="0.01" id="interestRate" name="interestRate" required value="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="term">Срок кредита (мес.)</label>
+                <select id="term" name="term" required>
+                    <option value="12">12 месяцев (1 год)</option>
+                    <option value="24">24 месяца (2 года)</option>
+                    <option value="36">36 месяцев (3 года)</option>
+                    <option value="48">48 месяцев (4 года)</option>
+                    <option value="60">60 месяцев (5 лет)</option>
                 </select>
             </div>
-            <button type="submit">Рассчитать</button>
+            
+            <button type="submit">Рассчитать платеж</button>
         </form>
-        <div class="result" id="result"></div>
+        
+        <div class="result" id="resultSection">
+            <div class="result-header">Результаты расчета</div>
+            
+            <!-- Параметры расчета -->
+            <div class="calculation-params">
+                <div class="param-row">
+                    <span>Сумма кредита:</span>
+                    <span class="result-value" id="resultAmount">0 руб.</span>
+                </div>
+                <div class="param-row">
+                    <span>Первоначальный взнос:</span>
+                    <span class="result-value" id="resultDownPayment">0 руб.</span>
+                </div>
+                <div class="param-row">
+                    <span>Процентная ставка:</span>
+                    <span class="result-value" id="resultInterestRate">0%</span>
+                </div>
+                <div class="param-row">
+                    <span>Срок кредита:</span>
+                    <span class="result-value" id="resultTerm">0 мес.</span>
+                </div>
+            </div>
+            
+            <!-- Основные результаты -->
+            <div class="result-row">
+                <span class="result-label">Ежемесячный платеж:</span>
+                <span class="result-value" id="resultMonthly">0 руб.</span>
+            </div>
+            
+            <div class="result-row">
+                <span class="result-label">Общая сумма выплат:</span>
+                <span class="result-value" id="resultTotal">0 руб.</span>
+            </div>
+            
+            <div class="result-row">
+                <span class="result-label">Переплата по кредиту:</span>
+                <span class="result-value" id="resultOverpayment">0 руб.</span>
+            </div>
+            
+            <div class="result-row">
+                <span class="result-label">Тело кредита:</span>
+                <span class="result-value" id="resultLoanAmount">0 руб.</span>
+            </div>
+            
+            <div class="result-divider"></div>
+            
+            <!-- Итоговая информация -->
+            <div class="result-total">
+                <div class="result-row">
+                    <span class="result-label"><strong>Итого к оплате:</strong></span>
+                    <span class="result-value"><strong id="resultTotalPayment">0 руб.</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <h4>Условия рассрочки 0,01%</h4>
+            <ul>
+                <li>Взнос 20% - срок 1 год</li>
+                <li>Взнос 30% - срок 2 года</li>
+                <li>Взнос 40% - срок 4 года</li>
+                <li>Взнос 60% - срок 5 лет</li>
+            </ul>
+            <p><strong>Банки:</strong> Совком, Т-Банк, Альфа-Банк</p>
+            <p><strong>КАСКО:</strong> обязательно</p>
+        </div>
     </div>
 
     <script>
+        // Связываем поля взноса в рублях и процентах
+        document.getElementById('amount').addEventListener('input', syncDownPayment);
+        document.getElementById('downPayment').addEventListener('input', syncDownPayment);
+        document.getElementById('downPaymentPercent').addEventListener('input', syncDownPayment);
+
+        function syncDownPayment() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const downPayment = document.getElementById('downPayment');
+            const downPaymentPercent = document.getElementById('downPaymentPercent');
+            
+            if (event.target.id === 'downPaymentPercent' && amount) {
+                const percentValue = parseFloat(downPaymentPercent.value);
+                downPayment.value = Math.round(amount * percentValue / 100);
+            } else if (event.target.id === 'downPayment' && amount) {
+                const paymentValue = parseFloat(downPayment.value);
+                downPaymentPercent.value = Math.round((paymentValue / amount) * 100);
+            } else if (event.target.id === 'amount' && downPayment.value) {
+                const paymentValue = parseFloat(downPayment.value);
+                downPaymentPercent.value = Math.round((paymentValue / amount) * 100);
+            }
+            
+            // Автоматически выбираем срок по проценту взноса
+            autoSelectTerm();
+        }
+
+        function autoSelectTerm() {
+            const percent = parseFloat(document.getElementById('downPaymentPercent').value);
+            const termSelect = document.getElementById('term');
+            
+            if (percent >= 60) termSelect.value = '60';
+            else if (percent >= 40) termSelect.value = '48';
+            else if (percent >= 30) termSelect.value = '24';
+            else if (percent >= 20) termSelect.value = '12';
+        }
+
+        // Расчет кредита
         document.getElementById('creditForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
             const amount = parseFloat(document.getElementById('amount').value);
             const downPayment = parseFloat(document.getElementById('downPayment').value);
             const interestRate = parseFloat(document.getElementById('interestRate').value);
             const term = parseInt(document.getElementById('term').value);
             
+            if (downPayment >= amount) {
+                alert('Сумма кредита должна быть больше первоначального взноса!');
+                return;
+            }
+            
             const loanAmount = amount - downPayment;
             const monthlyRate = interestRate / 100 / 12;
-            const monthlyPayment = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, term) / (Math.pow(1 + monthlyRate, term) - 1);
-            const totalPayment = monthlyPayment * term;
             
-            document.getElementById('result').innerHTML = `
-                <strong>Ежемесячный платеж:</strong> ${monthlyPayment.toFixed(2)} руб.<br>
-                <strong>Общая сумма:</strong> ${totalPayment.toFixed(2)} руб.
-            `;
+            let monthlyPayment;
+            if (monthlyRate === 0) {
+                monthlyPayment = loanAmount / term;
+            } else {
+                monthlyPayment = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, term) / (Math.pow(1 + monthlyRate, term) - 1);
+            }
+            
+            const totalPayment = monthlyPayment * term;
+            const overpayment = totalPayment - loanAmount;
+            
+            // Обновляем все поля результатов
+            document.getElementById('resultAmount').textContent = formatNumber(amount) + ' руб.';
+            document.getElementById('resultDownPayment').textContent = formatNumber(downPayment) + ' руб.';
+            document.getElementById('resultInterestRate').textContent = interestRate.toFixed(2) + '%';
+            document.getElementById('resultTerm').textContent = term + ' мес. (' + (term / 12) + ' лет)';
+            document.getElementById('resultMonthly').textContent = formatNumber(monthlyPayment) + ' руб.';
+            document.getElementById('resultTotal').textContent = formatNumber(totalPayment) + ' руб.';
+            document.getElementById('resultOverpayment').textContent = formatNumber(overpayment) + ' руб.';
+            document.getElementById('resultLoanAmount').textContent = formatNumber(loanAmount) + ' руб.';
+            document.getElementById('resultTotalPayment').textContent = formatNumber(totalPayment) + ' руб.';
+            
+            document.getElementById('resultSection').style.display = 'block';
+        });
+
+        function formatNumber(num) {
+            return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ');
+        }
+
+        // Заполняем примерными данными при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('amount').value = '1000000';
+            document.getElementById('downPayment').value = '200000';
+            document.getElementById('downPaymentPercent').value = '20';
+            document.getElementById('interestRate').value = '0.01';
+            document.getElementById('term').value = '12';
         });
     </script>
 </body>
