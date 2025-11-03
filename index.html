@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кредитный калькулятор</title>
+    <style>
+        .credit-widget {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="credit-widget">
+        <h2>Кредитный калькулятор</h2>
+        <form id="creditForm">
+            <div class="form-group">
+                <label>Сумма кредита (руб.)</label>
+                <input type="number" id="amount" value="1000000" required>
+            </div>
+            <div class="form-group">
+                <label>Первоначальный взнос (руб.)</label>
+                <input type="number" id="downPayment" value="200000" required>
+            </div>
+            <div class="form-group">
+                <label>Процентная ставка (%)</label>
+                <input type="number" id="interestRate" value="0.01" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Срок кредита (мес.)</label>
+                <select id="term">
+                    <option value="12">12 месяцев</option>
+                    <option value="24">24 месяца</option>
+                    <option value="36">36 месяцев</option>
+                </select>
+            </div>
+            <button type="submit">Рассчитать</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('creditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const term = parseInt(document.getElementById('term').value);
+            
+            const loanAmount = amount - downPayment;
+            const monthlyRate = interestRate / 100 / 12;
+            const monthlyPayment = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, term) / (Math.pow(1 + monthlyRate, term) - 1);
+            const totalPayment = monthlyPayment * term;
+            
+            document.getElementById('result').innerHTML = `
+                <strong>Ежемесячный платеж:</strong> ${monthlyPayment.toFixed(2)} руб.<br>
+                <strong>Общая сумма:</strong> ${totalPayment.toFixed(2)} руб.
+            `;
+        });
+    </script>
+</body>
+</html>
